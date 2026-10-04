@@ -10,14 +10,12 @@
     <link rel="apple-touch-icon" href="./favicon.png?v=3">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
+    <!-- Google Fonts & Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Three.js for 3D Background -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -32,21 +30,8 @@
                             cyan: '#00f0ff',
                             magenta: '#ff007f',
                             purple: '#7000ff',
-                            dark: '#080914',
-                        }
-                    },
-                    animation: {
-                        'pulse-glow': 'pulseGlow 2s infinite alternate',
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        pulseGlow: {
-                            '0%': { boxShadow: '0 0 15px rgba(0, 240, 255, 0.4)' },
-                            '100%': { boxShadow: '0 0 35px rgba(255, 0, 127, 0.8)' }
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-10px)' }
+                            dark: '#05060f',
+                            card: '#0d101d',
                         }
                     }
                 }
@@ -56,39 +41,51 @@
     <style>
         body {
             background-color: #05060f;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(112, 0, 255, 0.05) 0%, transparent 60%);
+            background-attachment: fixed;
             color: #f3f4f6;
-            overflow-x: hidden;
+            min-height: 100vh;
         }
+
         .neon-text-cyan {
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.7), 0 0 20px rgba(0, 240, 255, 0.4);
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.6), 0 0 30px rgba(0, 240, 255, 0.3);
         }
-        .neon-text-magenta {
-            text-shadow: 0 0 10px rgba(255, 0, 127, 0.7), 0 0 20px rgba(255, 0, 127, 0.4);
-        }
+
         .glass-panel {
-            background: rgba(15, 18, 37, 0.65);
+            background: rgba(13, 16, 29, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
+
         .glass-panel-hover {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .glass-panel-hover:hover {
             border-color: rgba(0, 240, 255, 0.4);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px -10px rgba(0, 240, 255, 0.25);
+            box-shadow: 0 12px 30px -10px rgba(0, 240, 255, 0.2);
+            transform: translateY(-2px);
         }
-        canvas#bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: auto;
+
+        /* Select styling for Dark theme */
+        .dark-select {
+            background-color: #121629;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
         }
-        /* Custom Scrollbar */
+
+        .dark-select:focus {
+            outline: none;
+            border-color: #00f0ff;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Custom Scrollbar Dark Style */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -106,233 +103,331 @@
 </head>
 <body class="min-h-screen flex flex-col font-sans selection:bg-brand-cyan selection:text-black">
 
-    <!-- 3D Canvas Background -->
-    <canvas id="bg-canvas"></canvas>
-
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <!-- Header Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-40 glass-panel border-b border-white/10 px-4 sm:px-6 py-3.5">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            
+            <!-- Logo -->
             <a href="#" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-cyan to-brand-magenta flex items-center justify-center p-0.5 shadow-lg group-hover:scale-105 transition-transform">
-                    <div class="w-full h-full bg-brand-dark rounded-full flex items-center justify-center">
-                        <i class="fa-solid fa-bowling-ball text-brand-cyan text-lg group-hover:rotate-180 transition-transform duration-700"></i>
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-cyan to-brand-magenta flex items-center justify-center p-0.5 shadow-lg group-hover:scale-105 transition-transform">
+                    <div class="w-full h-full bg-brand-dark rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid fa-cube text-brand-cyan text-sm"></i>
                     </div>
                 </div>
-                <span class="font-orbitron font-extrabold text-xl tracking-wider text-white">
-                    BALL <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-brand-magenta">RACINGS</span>
-                </span>
+                <div class="flex flex-col">
+                    <span class="font-orbitron font-extrabold text-base tracking-wider text-white">
+                        BALL <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-brand-magenta">RACINGS</span>
+                    </span>
+                    <span class="text-[10px] text-gray-400 font-normal leading-tight">
+                        Official Website
+                    </span>
+                </div>
             </a>
 
-            <!-- Links -->
-            <div class="flex items-center gap-2 sm:gap-4">
-                <a href="#release-notes" class="text-sm font-semibold text-gray-300 hover:text-brand-cyan transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/10 flex items-center gap-2">
+            <!-- Navigation Links -->
+            <nav class="flex items-center gap-1.5 sm:gap-3">
+                <a href="#release-notes" class="text-xs font-semibold text-gray-300 hover:text-brand-cyan transition-colors px-2.5 py-1.5 rounded-lg hover:bg-white/5 flex items-center gap-1.5">
                     <i class="fa-solid fa-list-check text-brand-magenta"></i>
                     <span class="hidden sm:inline">リリースノート</span>
                 </a>
-                <a href="#download" class="text-sm font-semibold text-gray-300 hover:text-brand-cyan transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/10 flex items-center gap-2">
+                <button type="button" onclick="openDownloadModal()" class="text-xs font-semibold text-gray-300 hover:text-brand-cyan transition-colors px-2.5 py-1.5 rounded-lg hover:bg-white/5 flex items-center gap-1.5">
                     <i class="fa-solid fa-download text-brand-cyan"></i>
-                    <span class="hidden sm:inline">ダウンロード</span>
+                    <span>ダウンロード</span>
+                </button>
+                <a href="#discord" class="text-xs font-semibold text-gray-300 hover:text-[#5865F2] transition-colors px-2.5 py-1.5 rounded-lg hover:bg-white/5 flex items-center gap-1.5">
+                    <i class="fa-brands fa-discord text-[#5865F2]"></i>
+                    <span class="hidden sm:inline">Discord</span>
                 </a>
-                <a href="#repository" class="text-sm font-semibold text-gray-300 hover:text-brand-cyan transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/10 flex items-center gap-2">
-                    <i class="fa-brands fa-github text-white"></i>
+                <a href="#repository" class="text-xs font-semibold text-gray-300 hover:text-white transition-colors px-2.5 py-1.5 rounded-lg hover:bg-white/5 flex items-center gap-1.5">
+                    <i class="fa-brands fa-github text-gray-300"></i>
                     <span class="hidden sm:inline">GitHub</span>
                 </a>
-            </div>
+            </nav>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <main class="flex-grow pt-28 pb-12 px-4 sm:px-6 relative z-10 flex flex-col items-center justify-center min-h-[85vh]">
-        <div class="max-w-4xl mx-auto text-center">
+    <!-- Main Hero Section -->
+    <main class="flex-grow pt-32 pb-16 px-4 sm:px-6 relative z-10 flex flex-col items-center justify-center">
+        <div class="max-w-3xl w-full mx-auto text-center">
             
-            <!-- Main Title -->
-            <h1 class="font-orbitron font-black text-5xl sm:text-7xl md:text-8xl tracking-tight mb-6 uppercase text-white leading-tight">
-                BALL <br class="sm:hidden" />
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-white to-brand-magenta neon-text-cyan">
-                    RACINGS
-                </span>
-            </h1>
+            <!-- Hero Card Container -->
+            <div class="glass-panel rounded-3xl p-8 sm:p-12 border border-white/10 relative overflow-hidden">
+                
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan text-xs font-semibold mb-6">
+                    <i class="fa-solid fa-cube"></i>
+                    <span>3D Ball Athletic Game</span>
+                </div>
 
-            <!-- Catchphrase -->
-            <p class="text-lg sm:text-2xl text-gray-300 max-w-2xl mx-auto font-light leading-relaxed mb-10">
-                シンプルで、軽量なボールアスレチックゲーム。
-            </p>
+                <!-- Main Title -->
+                <h1 class="font-orbitron font-black text-4xl sm:text-6xl tracking-tight mb-4 text-white leading-tight">
+                    BALL <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-white to-brand-magenta neon-text-cyan">RACINGS</span>
+                </h1>
 
-            <!-- Title Actions -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-                <button id="boost-btn" class="w-full sm:w-auto px-6 py-4 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-orbitron font-bold text-sm tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 hover:border-brand-cyan shadow-lg">
-                    <i class="fa-solid fa-bolt text-brand-cyan"></i> 視点ブースト体験
-                </button>
-            </div>
+                <!-- Catchphrase -->
+                <p class="text-base sm:text-xl text-gray-300 max-w-xl mx-auto font-light leading-relaxed mb-8">
+                    シンプルで、軽量なボールアスレチックゲーム。
+                </p>
 
-            <!-- Quick Controls Hint for 3D Background -->
-            <div class="inline-flex items-center gap-4 px-4 py-2 rounded-lg bg-black/40 border border-white/5 text-xs text-gray-400 mb-8 backdrop-blur-sm">
-                <span><i class="fa-solid fa-mouse-pointer text-brand-cyan mr-1"></i> マウス操作で3Dカメラが動きます</span>
-                <span class="text-white/20">|</span>
-                <button id="cam-toggle" class="text-brand-cyan hover:underline font-semibold">カメラモード切替</button>
+                <!-- Action Download & Community Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button type="button" onclick="openDownloadModal()" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-cyan to-blue-600 hover:from-brand-cyan hover:to-blue-500 text-black font-bold text-sm tracking-wide transition-all shadow-lg shadow-brand-cyan/20 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-download"></i> Windows版をダウンロード
+                    </button>
+                    <a href="#discord" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold text-sm transition-all shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-discord"></i> Discordに参加
+                    </a>
+                </div>
             </div>
 
             <!-- Scroll Indicator -->
-            <div class="mt-6 animate-bounce">
-                <a href="#release-notes" class="text-gray-400 hover:text-brand-cyan transition-colors text-sm flex flex-col items-center gap-2">
-                    <span class="font-orbitron text-xs tracking-widest uppercase">Scroll Down</span>
-                    <svg class="w-5 h-5 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            <div class="mt-8 animate-bounce">
+                <a href="#release-notes" class="text-gray-400 hover:text-brand-cyan transition-colors text-xs flex flex-col items-center gap-1">
+                    <span class="font-orbitron tracking-widest uppercase">Scroll Down</span>
+                    <i class="fa-solid fa-chevron-down text-sm"></i>
                 </a>
             </div>
         </div>
     </main>
 
     <!-- Release Notes Section -->
-    <section id="release-notes" class="relative z-10 py-16 px-4 sm:px-6 border-t border-white/10 bg-black/30 backdrop-blur-md scroll-mt-20">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="font-orbitron font-extrabold text-2xl sm:text-3xl text-white tracking-wider mb-2 text-center">
-                RELEASE NOTES
-            </h2>
-            <p class="text-gray-400 text-sm mb-8 text-center">
-                アップデート情報
-            </p>
+    <section id="release-notes" class="relative z-10 py-12 px-4 sm:px-6 scroll-mt-20">
+        <div class="max-w-3xl mx-auto">
+            
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center gap-2 text-white font-orbitron font-extrabold text-2xl">
+                    <i class="fa-solid fa-clock-rotate-left text-brand-cyan"></i>
+                    <h2>RELEASE NOTES</h2>
+                </div>
+                <p class="text-gray-400 text-xs mt-1">
+                    アップデート情報・最新の変更点
+                </p>
+            </div>
 
-            <!-- Version Card -->
-            <div class="glass-panel rounded-2xl p-6 sm:p-8 border border-white/10 max-w-xl mx-auto glass-panel-hover">
-                <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-                    <div>
-                        <span class="text-xs text-brand-cyan font-orbitron block mb-1">VERSION</span>
-                        <h3 class="font-orbitron text-2xl text-white font-bold tracking-wide">v0.2.0</h3>
+            <!-- Latest Release Card -->
+            <div class="glass-panel rounded-2xl p-6 sm:p-8 glass-panel-hover">
+                <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan font-orbitron font-bold text-base">
+                            v2
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-brand-cyan font-orbitron font-bold uppercase block">Latest Version</span>
+                            <h3 class="text-xl text-white font-bold">v0.2.0</h3>
+                        </div>
                     </div>
-                    <span class="text-xs px-3 py-1.5 rounded-full bg-brand-magenta/20 text-brand-magenta border border-brand-magenta/40 font-orbitron font-semibold">
-                        V2
+                    <span class="text-xs px-3 py-1 rounded-full bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/40 font-semibold">
+                        最新リリース
                     </span>
                 </div>
-                <ul class="space-y-4 text-gray-200 text-sm sm:text-base">
-                    <li class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan shrink-0">
-                            <i class="fa-solid fa-rotate-left"></i>
-                        </div>
+
+                <ul class="space-y-3 text-gray-200 text-sm">
+                    <li class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                        <i class="fa-solid fa-floppy-disk text-brand-cyan w-5 text-center text-base"></i>
                         <span class="font-medium">セーブ＆ロード機能</span>
                     </li>
-                    <li class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan shrink-0">
-                            <i class="fa-solid fa-gamepad"></i>
-                        </div>
+                    <li class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                        <i class="fa-solid fa-map text-brand-cyan w-5 text-center text-base"></i>
                         <span class="font-medium">ステージ拡張</span>
                     </li>
-                    <li class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan shrink-0">
-                            <i class="fa-solid fa-flags"></i>
-                        </div>
+                    <li class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+                        <i class="fa-solid fa-flag text-brand-cyan w-5 text-center text-base"></i>
                         <span class="font-medium">チェックポイント機能</span>
                     </li>
                 </ul>
             </div>
+
+            <!-- Past Release History Button -->
+            <div class="mt-5 text-center">
+                <button type="button" onclick="togglePastReleases()" id="past-releases-btn" class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300 hover:text-white flex items-center gap-2 mx-auto transition-all">
+                    <i class="fa-solid fa-history text-brand-cyan"></i>
+                    <span>過去の情報を見る</span>
+                    <i id="past-releases-icon" class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
+                </button>
+            </div>
+
+            <!-- Past Releases Accordion Content -->
+            <div id="past-releases-content" class="hidden mt-4 space-y-4">
+                <div class="glass-panel rounded-2xl p-6">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 font-orbitron font-bold text-xs">
+                                v1
+                            </div>
+                            <div>
+                                <h4 class="text-base text-white font-bold">v0.1.0</h4>
+                                <span class="text-[10px] text-gray-400">初回リリース</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li class="flex items-center gap-3 p-2.5 rounded-lg bg-white/5 border border-white/5">
+                            <i class="fa-solid fa-rotate-left text-brand-cyan w-5 text-center"></i>
+                            <span class="font-medium">リトライ機能</span>
+                        </li>
+                        <li class="flex items-center gap-3 p-2.5 rounded-lg bg-white/5 border border-white/5">
+                            <i class="fa-solid fa-gamepad text-brand-cyan w-5 text-center"></i>
+                            <span class="font-medium">カメラ操作仮想キー</span>
+                        </li>
+                        <li class="flex items-center gap-3 p-2.5 rounded-lg bg-white/5 border border-white/5">
+                            <i class="fa-solid fa-hand-pointer text-brand-cyan w-5 text-center"></i>
+                            <span class="font-medium">スライドでボール移動</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
     </section>
 
     <!-- Download Section -->
-    <section id="download" class="relative z-10 py-16 px-4 sm:px-6 border-t border-white/10 bg-black/50 backdrop-blur-md scroll-mt-20">
+    <section id="download" class="relative z-10 py-12 px-4 sm:px-6 scroll-mt-20">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="font-orbitron font-extrabold text-2xl sm:text-3xl text-white tracking-wider mb-2">
-                DOWNLOAD
-            </h2>
-            <p class="text-gray-400 text-sm mb-8">
-                Windows向け最新ビルド
-            </p>
+            
+            <div class="mb-6">
+                <div class="inline-flex items-center gap-2 text-white font-orbitron font-extrabold text-2xl">
+                    <i class="fa-solid fa-circle-arrow-down text-brand-cyan"></i>
+                    <h2>DOWNLOAD</h2>
+                </div>
+                <p class="text-gray-400 text-xs mt-1">
+                    Windows向けインストーラー/アーカイブ
+                </p>
+            </div>
 
-            <!-- Single Windows Download Card -->
-            <div class="glass-panel p-8 sm:p-10 rounded-2xl border border-white/10 glass-panel-hover flex flex-col items-center">
+            <div class="glass-panel p-8 rounded-2xl flex flex-col items-center glass-panel-hover">
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-cyan/20 to-blue-500/20 border border-brand-cyan/40 flex items-center justify-center text-brand-cyan text-3xl mb-4 shadow-lg shadow-brand-cyan/10">
                     <i class="fa-brands fa-windows"></i>
                 </div>
-                <h3 class="font-orbitron font-bold text-2xl text-white mb-2">Ball Racings for Windows</h3>
-                <p class="text-xs text-gray-400 mb-8">対応OS: Windows 10 / 11 (64bit) | バージョン: v0.2.0</p>
+                <h3 class="font-bold text-2xl text-white mb-1">Ball Racings for Windows</h3>
+                <p class="text-xs text-gray-400 mb-6">対応OS: Windows 10 / 11 (64bit) | 各バージョン選択可能</p>
                 
-                <a href="https://github.com/exfat-dev3/Ball-Racings-Games/releases/download/v2/ball-racings_v0.2.0.zip" 
-                   download 
-                   class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-cyan via-blue-500 to-brand-magenta hover:opacity-95 text-white font-bold text-base sm:text-lg tracking-wide transition-all duration-300 shadow-xl shadow-brand-cyan/20 flex items-center justify-center gap-3 hover:scale-105 active:scale-95">
-                    <i class="fa-solid fa-download text-xl"></i>
-                    <span>Ball-Racings-v0.2.0.zipをダウンロード（Windows）</span>
+                <button type="button" 
+                        onclick="openDownloadModal()" 
+                        class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-cyan to-blue-600 hover:from-brand-cyan hover:to-blue-500 text-black font-bold text-base transition-all shadow-lg shadow-brand-cyan/20 flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-download text-lg"></i>
+                    <span>バージョンを選択してダウンロード</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Discord Community Section -->
+    <section id="discord" class="relative z-10 py-12 px-4 sm:px-6 scroll-mt-20">
+        <div class="max-w-3xl mx-auto text-center">
+            
+            <div class="mb-6">
+                <div class="inline-flex items-center gap-2 text-white font-orbitron font-extrabold text-2xl">
+                    <i class="fa-brands fa-discord text-[#5865F2]"></i>
+                    <h2>OFFICIAL DISCORD</h2>
+                </div>
+                <p class="text-gray-400 text-xs mt-1">
+                    公式Discordコミュニティサーバー
+                </p>
+            </div>
+
+            <div class="glass-panel p-8 rounded-2xl flex flex-col items-center glass-panel-hover">
+                <div class="w-16 h-16 rounded-2xl bg-[#5865F2]/20 border border-[#5865F2]/40 flex items-center justify-center text-[#5865F2] text-3xl mb-4 shadow-lg shadow-indigo-500/10">
+                    <i class="fa-brands fa-discord"></i>
+                </div>
+                <h3 class="font-bold text-xl sm:text-2xl text-white mb-2">Ball Racings 公式 Discord</h3>
+                <p class="text-sm text-gray-300 mb-6 max-w-md leading-relaxed">
+                    最新のアップデート情報、バグ報告・不具合修正のご連絡、開発者や他のプレイヤーとの交流は公式Discordで行っています。
+                </p>
+                
+                <a href="https://discord.gg/wVZ9J8VN5q" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold text-sm transition-all shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2.5">
+                    <i class="fa-brands fa-discord text-lg"></i>
+                    <span>Discord サーバーに参加する</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-80 ml-1"></i>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Repository Section -->
-    <section id="repository" class="relative z-10 py-16 px-4 sm:px-6 border-t border-white/10 bg-black/60 backdrop-blur-md scroll-mt-20">
+    <!-- GitHub Repository Section -->
+    <section id="repository" class="relative z-10 py-12 px-4 sm:px-6 scroll-mt-20">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="font-orbitron font-extrabold text-2xl sm:text-3xl text-white tracking-wider mb-2">
-                GITHUB REPOSITORY
-            </h2>
-            <p class="text-gray-400 text-sm mb-8">
-                GitHub公式リポジトリ
-            </p>
+            
+            <div class="mb-6">
+                <div class="inline-flex items-center gap-2 text-white font-orbitron font-extrabold text-2xl">
+                    <i class="fa-brands fa-github text-gray-300"></i>
+                    <h2>GITHUB REPOSITORY</h2>
+                </div>
+                <p class="text-gray-400 text-xs mt-1">
+                    公式ソースコード＆リポジトリ
+                </p>
+            </div>
 
-            <div class="glass-panel p-8 sm:p-10 rounded-2xl border border-white/10 glass-panel-hover flex flex-col items-center">
-                <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/20 flex items-center justify-center text-white text-3xl mb-4 shadow-lg">
+            <div class="glass-panel p-8 rounded-2xl flex flex-col items-center glass-panel-hover">
+                <div class="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white text-2xl mb-4">
                     <i class="fa-brands fa-github"></i>
                 </div>
-                <h3 class="font-orbitron font-bold text-2xl text-white mb-2">Ball-Racings-Games</h3>
+                <h3 class="font-bold text-xl text-white mb-2">Ball-Racings-Games</h3>
                 <p class="text-sm text-gray-300 mb-6 max-w-md">
-                    リリース一覧、更新履歴は GitHub 上で公開されています。
+                    プロジェクトのソースコード、リリース一覧、更新履歴は GitHub 上で公開されています。
                 </p>
                 
                 <a href="https://github.com/exfat-dev3/Ball-Racings-Games" 
                    target="_blank" 
                    rel="noopener noreferrer" 
-                   class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 hover:border-brand-cyan text-white font-bold text-base transition-all duration-300 shadow-lg flex items-center justify-center gap-3 hover:scale-105 active:scale-95">
-                    <i class="fa-brands fa-github text-xl"></i>
+                   class="w-full sm:w-auto px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-github text-lg"></i>
                     <span>GitHub リポジトリを見る</span>
-                    <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400"></i>
+                    <i class="fa-solid fa-up-right-from-square text-xs text-gray-400 ml-1"></i>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Legal & Contact Bottom Section -->
-    <section id="legal-contact" class="relative z-10 py-16 px-4 sm:px-6 border-t border-white/10 bg-black/80 backdrop-blur-md">
-        <div class="max-w-5xl mx-auto space-y-12">
+    <!-- Terms / Privacy / Contact Section -->
+    <section id="legal-contact" class="relative z-10 py-12 px-4 sm:px-6">
+        <div class="max-w-4xl mx-auto space-y-8">
             
             <!-- Terms Section -->
-            <div class="glass-panel p-6 sm:p-8 rounded-2xl border border-white/10">
-                <h3 class="font-orbitron font-bold text-xl text-white mb-4 flex items-center gap-2 border-b border-white/10 pb-3">
+            <div class="glass-panel p-6 sm:p-8 rounded-2xl">
+                <h3 class="font-bold text-lg sm:text-xl text-white mb-4 flex items-center gap-2 border-b border-white/10 pb-3">
                     <i class="fa-solid fa-file-contract text-brand-cyan"></i> 利用規約
                 </h3>
-                <div class="text-sm text-gray-300 space-y-3 font-light leading-relaxed">
+                <div class="text-xs sm:text-sm text-gray-300 space-y-3 leading-relaxed">
                     <p>本利用規約（以下「本規約」）は、Ball Racings Project（以下「当方」）が提供するゲーム『Ball Racings』（以下「本ゲーム」）の利用条件を定めるものです。</p>
-                    <h4 class="font-semibold text-white text-sm pt-2">1. 権利帰属とサードパーティライセンス</h4>
+                    <h4 class="font-semibold text-white pt-1">1. 権利帰属とサードパーティライセンス</h4>
                     <p>本ゲーム内のコンテンツおよびプログラムの著作権は当方に帰属します。また、本ゲームはオープンソースのゲームエンジン <strong>Godot Engine</strong> を使用して開発されています。</p>
-                    <div class="p-3 bg-white/5 rounded-lg text-xs font-mono text-gray-400 border border-white/5">
+                    <div class="p-3 bg-white/5 rounded-xl text-xs font-mono text-gray-300 border border-white/10">
                         Godot Engine is licensed under the MIT License.<br>
                         Copyright (c) 2014-present Juan Linietsky, Ariel Manzur and contributors.
                     </div>
-                    <h4 class="font-semibold text-white text-sm pt-2">2. 禁止事項</h4>
+                    <h4 class="font-semibold text-white pt-1">2. 禁止事項</h4>
                     <p>本ゲームデータの無断二次配布・販売、公序良俗に反する目的での利用、および本ゲームの運営を妨害する行為を禁止します。</p>
-                    <h4 class="font-semibold text-white text-sm pt-2">3. 免責事項</h4>
+                    <h4 class="font-semibold text-white pt-1">3. 免責事項</h4>
                     <p>本ゲームの利用によって生じた直接的または間接的なトラブル・損害について、当方は一切の責任を負いません。</p>
                 </div>
             </div>
 
-            <!-- Privacy Section -->
-            <div class="glass-panel p-6 sm:p-8 rounded-2xl border border-white/10">
-                <h3 class="font-orbitron font-bold text-xl text-white mb-4 flex items-center gap-2 border-b border-white/10 pb-3">
+            <!-- Privacy Policy Section -->
+            <div class="glass-panel p-6 sm:p-8 rounded-2xl">
+                <h3 class="font-bold text-lg sm:text-xl text-white mb-4 flex items-center gap-2 border-b border-white/10 pb-3">
                     <i class="fa-solid fa-user-shield text-brand-magenta"></i> プライバシーポリシー
                 </h3>
-                <div class="text-sm text-gray-300 space-y-3 font-light leading-relaxed">
+                <div class="text-xs sm:text-sm text-gray-300 space-y-3 leading-relaxed">
                     <p>Ball Racings Project（以下「当方」）は、『Ball Racings』（以下「本ゲーム」）におけるプライバシー情報の取扱いについて以下の通り定めます。</p>
-                    <h4 class="font-semibold text-white text-sm pt-2">1. 個人情報の収集・利用</h4>
+                    <h4 class="font-semibold text-white pt-1">1. 個人情報の収集・利用</h4>
                     <p>本ゲームおよび本公式サイトでは、ユーザーの個人情報（名前、住所、電話番号、メールアドレス等）を直接収集・保存することはありません。</p>
-                    <h4 class="font-semibold text-white text-sm pt-2">2. ゲームエンジン・技術情報</h4>
+                    <h4 class="font-semibold text-white pt-1">2. ゲームエンジン・技術情報</h4>
                     <p>本ゲームは <strong>Godot Engine</strong> を利用して制作されています。ゲーム自体が特定の個人識別情報を収集することはありません。</p>
                 </div>
             </div>
 
             <!-- Contact Section -->
-            <div class="glass-panel p-6 sm:p-8 rounded-2xl border border-white/10 text-center">
-                <h3 class="font-orbitron font-bold text-xl text-white mb-4 flex items-center justify-center gap-2 border-b border-white/10 pb-3">
+            <div class="glass-panel p-6 sm:p-8 rounded-2xl text-center">
+                <h3 class="font-bold text-lg sm:text-xl text-white mb-4 flex items-center justify-center gap-2 border-b border-white/10 pb-3">
                     <i class="fa-regular fa-envelope text-brand-cyan"></i> お問い合わせ
                 </h3>
-                <p class="text-sm text-gray-300 mb-4 font-light">
+                <p class="text-xs sm:text-sm text-gray-300 mb-4">
                     ゲームに関する不具合の報告、ご質問、ご意見等は下記メールアドレスまでご連絡をお願いいたします。
                 </p>
-                <a href="mailto:kabylake321@gmail.com" class="inline-block px-6 py-3 rounded-xl bg-white/5 border border-brand-cyan/40 hover:border-brand-cyan text-brand-cyan font-mono font-bold text-base transition-all hover:scale-105 shadow-lg">
+                <a href="mailto:kabylake321@gmail.com" class="inline-block px-6 py-2.5 rounded-xl bg-white/5 border border-brand-cyan/40 hover:border-brand-cyan text-brand-cyan font-mono font-bold text-sm transition-all hover:scale-105">
                     kabylake321@gmail.com
                 </a>
             </div>
@@ -341,299 +436,159 @@
     </section>
 
     <!-- Footer -->
-    <footer class="relative z-10 border-t border-white/10 bg-brand-dark py-8 px-6 text-center text-gray-500 text-xs">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer class="relative z-10 border-t border-white/10 bg-brand-dark/90 backdrop-blur-md py-6 px-6 text-center text-gray-400 text-xs mt-auto">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <p>&copy; 2026 Ball Racings Project. All rights reserved.</p>
             <div class="flex items-center gap-6">
-                <button onclick="openModal('modal-terms')" class="hover:text-brand-cyan transition-colors">利用規約</button>
-                <button onclick="openModal('modal-privacy')" class="hover:text-brand-cyan transition-colors">プライバシーポリシー</button>
-                <button onclick="openModal('modal-contact')" class="hover:text-brand-cyan transition-colors">お問い合わせ</button>
+                <a href="#legal-contact" class="hover:text-brand-cyan transition-colors">利用規約</a>
+                <a href="#legal-contact" class="hover:text-brand-cyan transition-colors">プライバシーポリシー</a>
+                <a href="#legal-contact" class="hover:text-brand-cyan transition-colors">お問い合わせ</a>
             </div>
         </div>
     </footer>
 
-    <!-- Modals -->
-    <!-- Terms Modal -->
-    <div id="modal-terms" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden">
-        <div class="glass-panel max-w-xl w-full p-6 sm:p-8 rounded-2xl border border-white/20 shadow-2xl relative max-h-[85vh] overflow-y-auto">
-            <button onclick="closeModal('modal-terms')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <h3 class="font-orbitron font-bold text-xl text-white mb-4 border-b border-white/10 pb-2">利用規約</h3>
-            <div class="text-sm text-gray-300 space-y-4 leading-relaxed font-light">
-                <p>本利用規約（以下「本規約」）は、Ball Racings Project（以下「当方」）が提供するゲーム『Ball Racings』（以下「本ゲーム」）の利用条件を定めるものです。</p>
-                <h4 class="font-semibold text-white text-base mt-3">1. 権利帰属とサードパーティライセンス</h4>
-                <p>本ゲーム内のコンテンツおよびプログラムの著作権は当方に帰属します。また、本ゲームはオープンソースのゲームエンジン <strong>Godot Engine</strong> を使用して開発されています。</p>
-                <div class="p-3 bg-white/5 rounded-lg text-xs font-mono text-gray-400 border border-white/5">
-                    Godot Engine is licensed under the MIT License.<br>
-                    Copyright (c) 2014-present Juan Linietsky, Ariel Manzur and contributors.
+    <!-- Download Version Select Modal Window (Dark Glass Style) -->
+    <div id="download-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="glass-panel w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-white/20 transform transition-all duration-200">
+            
+            <!-- Window Header / Title Bar -->
+            <div class="px-5 py-3 border-b border-white/10 flex items-center justify-between bg-white/5">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-cube text-brand-cyan text-sm"></i>
+                    <span class="font-bold text-xs sm:text-sm text-white tracking-wide">
+                        Ball Racings - バージョン選択画面
+                    </span>
                 </div>
-                <h4 class="font-semibold text-white text-base mt-3">2. 禁止事項</h4>
-                <p>ユーザーは以下の行為を行ってはなりません。</p>
-                <ul class="list-disc list-inside space-y-1 text-gray-400 pl-2">
-                    <li>本ゲームデータの無断二次配布・販売</li>
-                    <li>公序良俗に反する目的での利用</li>
-                    <li>本ゲームの運営を妨害するおそれのある行為</li>
-                </ul>
-                <h4 class="font-semibold text-white text-base mt-3">3. 免責事項</h4>
-                <p>本ゲームの利用によって生じた直接的または間接的なトラブル・損害について、当方は一切の責任を負いません。</p>
+                <button type="button" 
+                        onclick="closeDownloadModal()" 
+                        class="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/15 flex items-center justify-center text-gray-300 hover:text-white text-xs font-bold transition-all"
+                        title="閉じる">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
-        </div>
-    </div>
 
-    <!-- Privacy Modal -->
-    <div id="modal-privacy" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden">
-        <div class="glass-panel max-w-xl w-full p-6 sm:p-8 rounded-2xl border border-white/20 shadow-2xl relative max-h-[85vh] overflow-y-auto">
-            <button onclick="closeModal('modal-privacy')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <h3 class="font-orbitron font-bold text-xl text-white mb-4 border-b border-white/10 pb-2">プライバシーポリシー</h3>
-            <div class="text-sm text-gray-300 space-y-4 leading-relaxed font-light">
-                <p>Ball Racings Project（以下「当方」）は、『Ball Racings』（以下「本ゲーム」）におけるプライバシー情報の取扱いについて以下の通り定めます。</p>
-                <h4 class="font-semibold text-white text-base mt-3">1. 個人情報の収集・利用</h4>
-                <p>本ゲームおよび本公式サイトでは、ユーザーの個人情報（名前、住所、電話番号、メールアドレス等）を直接収集・保存することはありません。</p>
-                <h4 class="font-semibold text-white text-base mt-3">2. ゲームエンジン・技術情報</h4>
-                <p>本ゲームは <strong>Godot Engine</strong> を利用して制作されています。ゲーム自体が特定の個人識別情報を収集することはありません。</p>
-                <h4 class="font-semibold text-white text-base mt-3">3. お問い合わせ窓口</h4>
-                <p>プライバシーポリシーに関するご質問やご相談は、下記のお問い合わせ先までご連絡ください。</p>
-                <p class="text-brand-cyan font-mono text-sm">kabylake321@gmail.com</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Contact Modal -->
-    <div id="modal-contact" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm hidden">
-        <div class="glass-panel max-w-lg w-full p-6 sm:p-8 rounded-2xl border border-white/20 shadow-2xl relative">
-            <button onclick="closeModal('modal-contact')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <h3 class="font-orbitron font-bold text-xl text-white mb-4 border-b border-white/10 pb-2">お問い合わせ</h3>
-            <div class="text-sm text-gray-300 space-y-4 leading-relaxed font-light text-center py-2">
-                <div class="w-12 h-12 rounded-full bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan flex items-center justify-center mx-auto text-xl mb-3">
-                    <i class="fa-regular fa-envelope"></i>
+            <!-- Window Content Area -->
+            <div class="p-6 sm:p-8 space-y-6">
+                
+                <div class="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                    <div class="w-12 h-12 rounded-xl bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan text-2xl shrink-0">
+                        <i class="fa-brands fa-windows"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-base text-white">Ball Racings for Windows</h4>
+                        <p class="text-xs text-gray-400 mt-0.5">対応OS: Windows 10 / 11 (64bit)</p>
+                    </div>
                 </div>
-                <p>ゲームに関する不具合の報告、ご質問、ご意見等は下記メールアドレスまでご連絡をお願いいたします。</p>
-                <a href="mailto:kabylake321@gmail.com" class="inline-block px-6 py-3 rounded-xl bg-white/5 border border-brand-cyan/40 hover:border-brand-cyan text-brand-cyan font-mono font-bold text-base transition-all hover:scale-105">
-                    kabylake321@gmail.com
-                </a>
+
+                <!-- Version Selection Controls -->
+                <div class="space-y-2">
+                    <label for="version-select" class="block text-xs font-bold text-gray-200">
+                        <i class="fa-solid fa-code-branch text-brand-cyan mr-1"></i> ダウンロードするバージョンを選択:
+                    </label>
+                    <select id="version-select" onchange="updateDownloadLink()" class="dark-select w-full px-3.5 py-2.5 rounded-xl text-sm font-medium">
+                        <option value="v0.2.0">v0.2.0 (最新版 - セーブ＆ロード, ステージ拡張)</option>
+                        <option value="v0.1.0">v0.1.0 (初回リリース - リトライ機能, 仮想キー)</option>
+                    </select>
+                </div>
+
+                <!-- Selected Version Info Box -->
+                <div id="version-info" class="p-4 rounded-xl bg-brand-cyan/5 border border-brand-cyan/20 text-xs text-gray-300 space-y-2">
+                    <div class="flex items-center justify-between font-bold text-white">
+                        <span id="version-title">バージョン: v0.2.0</span>
+                        <span id="version-badge" class="px-2 py-0.5 rounded bg-brand-cyan text-black text-[10px] font-bold">最新</span>
+                    </div>
+                    <p id="version-desc" class="leading-relaxed">
+                        セーブ＆ロード機能、ステージ拡張、チェックポイント機能が含まれる最新ビルドです。
+                    </p>
+                    <div class="text-[11px] text-gray-400 font-mono pt-1">
+                        ファイル名: <span id="version-filename">ball-racings_v0.2.0.zip</span>
+                    </div>
+                </div>
+
+                <!-- Action Download Button -->
+                <div class="pt-2 flex flex-col sm:flex-row items-center justify-end gap-3">
+                    <button type="button" onclick="closeDownloadModal()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300">
+                        キャンセル
+                    </button>
+                    <a id="download-action-btn" 
+                       href="https://github.com/exfat-dev3/Ball-Racings-Games/releases/download/v2/ball-racings_v0.2.0.zip" 
+                       download 
+                       class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand-cyan to-blue-600 hover:from-brand-cyan hover:to-blue-500 text-black text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-brand-cyan/20">
+                        <i class="fa-solid fa-download"></i>
+                        <span>ダウンロードを開始</span>
+                    </a>
+                </div>
+
             </div>
+
         </div>
     </div>
 
-    <!-- 3D Graphics Script -->
+    <!-- Scripts -->
     <script>
-        let scene, camera, renderer;
-        let trackMesh, trackCurve;
-        let balls = [];
-        let mouseX = 0, mouseY = 0;
-        let cameraMode = 0; // 0: Orbit, 1: Follow Ball
-        let boostFactor = 1;
-
-        window.onload = function() {
-            initThreeJS();
-            animate();
+        // Version details data mapping
+        const versionData = {
+            'v0.2.0': {
+                title: 'バージョン: v0.2.0',
+                badge: '最新',
+                desc: 'セーブ＆ロード機能、ステージ拡張、チェックポイント機能が含まれる最新リリースです。',
+                filename: 'ball-racings_v0.2.0.zip',
+                url: 'https://github.com/exfat-dev3/Ball-Racings-Games/releases/download/v2/ball-racings_v0.2.0.zip'
+            },
+            'v0.1.0': {
+                title: 'バージョン: v0.1.0',
+                badge: '過去版',
+                desc: '初回リリース版。リトライ機能、カメラ操作仮想キー、スライドボール移動機能を搭載。',
+                filename: 'ball-racings_v0.1.0.zip',
+                url: 'https://github.com/exfat-dev3/Ball-Racings-Games/releases/download/v1/ball-racings_v0.1.0.zip'
+            }
         };
 
-        function initThreeJS() {
-            const canvas = document.getElementById('bg-canvas');
-            scene = new THREE.Scene();
-
-            // Camera Setup
-            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 25, 55);
-
-            // Renderer setup
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-            scene.add(ambientLight);
-
-            const pointLight = new THREE.PointLight(0x00f0ff, 2, 100);
-            pointLight.position.set(0, 20, 0);
-            scene.add(pointLight);
-
-            const magentaLight = new THREE.PointLight(0xff007f, 2, 100);
-            magentaLight.position.set(0, -20, 0);
-            scene.add(magentaLight);
-
-            // Create Track (Rollercoaster Curve)
-            const points = [];
-            for (let i = 0; i < 12; i++) {
-                const angle = (i / 12) * Math.PI * 2;
-                const radius = 35 + Math.sin(i * 2) * 10;
-                const y = Math.sin(i * 3) * 12;
-                points.push(new THREE.Vector3(
-                    Math.cos(angle) * radius,
-                    y,
-                    Math.sin(angle) * radius
-                ));
-            }
-            trackCurve = new THREE.CatmullRomCurve3(points, true);
-
-            // Track Mesh (Tube)
-            const tubeGeometry = new THREE.TubeGeometry(trackCurve, 120, 1.2, 8, true);
-            const tubeMaterial = new THREE.MeshBasicMaterial({
-                color: 0x1a2340,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.25
-            });
-            trackMesh = new THREE.Mesh(tubeGeometry, tubeMaterial);
-            scene.add(trackMesh);
-
-            // Inner Neon Rail
-            const railGeometry = new THREE.TubeGeometry(trackCurve, 120, 0.2, 6, true);
-            const railMaterial = new THREE.MeshBasicMaterial({
-                color: 0x00f0ff,
-                wireframe: false,
-                transparent: true,
-                opacity: 0.6
-            });
-            const railMesh = new THREE.Mesh(railGeometry, railMaterial);
-            scene.add(railMesh);
-
-            // Create Racing Balls
-            const ballColors = [0x00f0ff, 0xff007f, 0x7000ff, 0x00ff88, 0xffbb00];
-            const ballGeo = new THREE.SphereGeometry(1.2, 32, 32);
-
-            for (let i = 0; i < ballColors.length; i++) {
-                const mat = new THREE.MeshStandardMaterial({
-                    color: ballColors[i],
-                    emissive: ballColors[i],
-                    emissiveIntensity: 0.6,
-                    roughness: 0.2,
-                    metalness: 0.8
-                });
-                const mesh = new THREE.Mesh(ballGeo, mat);
-                
-                // Light aura around balls
-                const pLight = new THREE.PointLight(ballColors[i], 1, 10);
-                mesh.add(pLight);
-
-                scene.add(mesh);
-
-                balls.push({
-                    mesh: mesh,
-                    progress: i * 0.18,
-                    speed: 0.0015 + Math.random() * 0.0005,
-                    color: ballColors[i]
-                });
-            }
-
-            // Background Speed Particles
-            const particleGeo = new THREE.BufferGeometry();
-            const particleCount = 400;
-            const posArray = new Float32Array(particleCount * 3);
-
-            for (let i = 0; i < particleCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 200;
-            }
-            particleGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-
-            const particleMat = new THREE.PointsMaterial({
-                size: 0.6,
-                color: 0xffffff,
-                transparent: true,
-                opacity: 0.4
-            });
-
-            const particles = new THREE.Points(particleGeo, particleMat);
-            scene.add(particles);
-
-            // Event Listeners
-            window.addEventListener('resize', onWindowResize);
-            document.addEventListener('mousemove', onMouseMove);
-
-            // UI Interaction Hooks
-            const boostBtn = document.getElementById('boost-btn');
-            if (boostBtn) {
-                boostBtn.addEventListener('click', function() {
-                    boostFactor = 4;
-                });
-            }
-
-            const camToggle = document.getElementById('cam-toggle');
-            if (camToggle) {
-                camToggle.addEventListener('click', function() {
-                    cameraMode = (cameraMode + 1) % 2;
-                    this.textContent = cameraMode === 0 ? 'カメラモード切替 (追従モードへ)' : 'カメラモード切替 (自由カメラへ)';
-                });
-            }
-        }
-
-        function onMouseMove(event) {
-            mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
-            mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Decay boost smoothly
-            if (boostFactor > 1) {
-                boostFactor -= 0.03;
-            } else {
-                boostFactor = 1;
-            }
-
-            // Update Ball Positions along the track curve
-            balls.forEach((ball) => {
-                ball.progress += ball.speed * boostFactor;
-                if (ball.progress > 1) ball.progress -= 1;
-
-                const point = trackCurve.getPointAt(ball.progress);
-
-                ball.mesh.position.copy(point);
-                
-                // Add rotation for motion feel
-                ball.mesh.rotation.x += 0.05 * boostFactor;
-                ball.mesh.rotation.z += 0.03 * boostFactor;
-            });
-
-            // Camera Motion Logic
-            if (cameraMode === 0) {
-                // Free Orbiting Camera responsive to Mouse
-                const targetX = mouseX * 15;
-                const targetY = 25 - mouseY * 10;
-                
-                camera.position.x += (targetX - camera.position.x) * 0.03;
-                camera.position.y += (targetY - camera.position.y) * 0.03;
-                camera.lookAt(0, 0, 0);
-            } else {
-                // Follow Lead Ball Camera
-                const leadBall = balls[0];
-                const ballPos = leadBall.mesh.position;
-                
-                camera.position.x += (ballPos.x + 10 - camera.position.x) * 0.05;
-                camera.position.y += (ballPos.y + 12 - camera.position.y) * 0.05;
-                camera.position.z += (ballPos.z + 18 - camera.position.z) * 0.05;
-                camera.lookAt(ballPos);
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        // Modal Handler Functions
-        function openModal(id) {
-            const modal = document.getElementById(id);
+        function openDownloadModal() {
+            const modal = document.getElementById('download-modal');
             if (modal) {
                 modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
             }
         }
 
-        function closeModal(id) {
-            const modal = document.getElementById(id);
+        function closeDownloadModal() {
+            const modal = document.getElementById('download-modal');
             if (modal) {
                 modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function updateDownloadLink() {
+            const select = document.getElementById('version-select');
+            const selectedVer = select.value;
+            const data = versionData[selectedVer];
+
+            if (data) {
+                document.getElementById('version-title').textContent = data.title;
+                document.getElementById('version-badge').textContent = data.badge;
+                document.getElementById('version-desc').textContent = data.desc;
+                document.getElementById('version-filename').textContent = data.filename;
+                
+                const btn = document.getElementById('download-action-btn');
+                btn.href = data.url;
+            }
+        }
+
+        function togglePastReleases() {
+            const content = document.getElementById('past-releases-content');
+            const icon = document.getElementById('past-releases-icon');
+            const btnText = document.querySelector('#past-releases-btn span');
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+                if (btnText) btnText.textContent = '過去の情報を閉じる';
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+                if (btnText) btnText.textContent = '過去の情報を見る';
             }
         }
     </script>
